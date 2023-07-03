@@ -1,0 +1,108 @@
+Crear nuevos campos en extension de Empleado (UD_EMPLEADO)
+
+como candidatos los item tipo clasificador
+    CAMISA (Camisa / Chaqueta)
+    PANTALON
+    CALZADO
+    CAMPERA
+    BUZO (Buzo / Sweater)
+    REMERA (Remera / Chomba)
+    PRENDA COMPLETA
+
+Actualizar los campos creados con los datos de los talles actuales (usar esta query)
+
+
+SELECT CC.NOMBRE AS CENTROCOSTOS
+
+,EMPL.CODIGO AS LEGAJO
+
+,PER.NOMBRE AS EMPLEADO
+
+,ISNULL(SEC.NOMBRE, '') AS SECTOR
+
+,TPROD.NOMBRE AS TIPOPRODUCTO
+
+,PROD.DESCRIPCION AS PRODUCTO
+
+,UPROD.TALLE AS TALLE
+
+,UETA.CANTIDAD AS CANTIDAD
+
+,ISNULL(PUE.DESCRIPCION, '') AS PUESTO
+
+FROM EMPLEADO AS EMPL WITH(NOLOCK)
+
+INNER JOIN UD_EMPLEADO AS UEMPL WITH(NOLOCK) ON EMPL.BOEXTENSION_ID = UEMPL.ID
+
+INNER JOIN PERSONAFISICA AS PER WITH(NOLOCK) ON EMPL.ENTEASOCIADO_ID = PER.ID
+
+INNER JOIN CENTROCOSTOS AS CC WITH(NOLOCK) ON EMPL.CENTROCOSTOS_ID = CC.ID
+
+LEFT JOIN SECTOR AS SEC WITH(NOLOCK) ON EMPL.SECTOR_ID = SEC.ID
+
+LEFT JOIN PUESTO AS PUE WITH(NOLOCK) ON EMPL.PUESTO_ID = PUE.ID
+
+INNER JOIN UD_EMPLEADOTALLES AS UETA WITH(NOLOCK) ON UEMPL.INDUMENTARIATALLES_ID = UETA.BO_PLACE_ID
+
+INNER JOIN PRODUCTO AS PROD WITH(NOLOCK) ON UETA.PRODUCTO_ID = PROD.ID
+
+INNER JOIN UD_PRODUCTO AS UPROD WITH(NOLOCK) ON PROD.BOEXTENSION_ID = UPROD.ID
+
+INNER JOIN ITEMTIPOCLASIFICADOR AS TPROD WITH(NOLOCK) ON UPROD.TIPOINDUMENTARIA2_ID = TPROD.ID
+
+WHERE EMPL.ACTIVESTATUS = 0
+
+AND EMPL.CODIGO = '8717'
+
+ORDER BY CC.NOMBRE, PER.NOMBRE, EMPL.CODIGO, TPROD.CODIGO, PROD.DESCRIPCION
+
+
+
+
+Hacer un BI para que se vean los datos de los tipo de indumentaria como columnas, empleados como filas y completar todas las celdas
+
+
+
+
+Hacer una Fx para importar el XLS y actualizar los empleados
+--hecho
+
+
+
+Modificar Fx de EP a empleado, llevar talles a la nueva ud
+--hecho
+
+
+
+
+
+paso 2
+
+crear ud
+
+crear fx de actualizar productos
+
+leer desde ud a la hora de asignar productos
+
+https://i.imgur.com/cYZK0ok.png
+
+
+
+
+
+
+-          Se necesita incluir un campo en el empleado potencial, que sea
+trasladado a el empleado creado, que diga el ID de la importación. Debe
+indicar semana y mes, ejemplo: 1ra semana de marzo, 2da semana de marzo 
+
+Este ticket es relativamente fácil. Hay que crear una extensión en el Empleado
+ y al momento de hacer la importación desde Empleado potencial a Empleado poner 
+ algún identificador (relevarlo con @Lu Nadaya y @Mario León )
+ IdentificadorEmplmportacion
+
+
+
+
+
+
+ agg a_categoria que es un atributo de empleado, a_perfil atributo de empleado
